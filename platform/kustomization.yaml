@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - namespaces/playground.yaml
   - ingress/argocd.yaml
+  - ingress/argocd-servers-transport.yaml
