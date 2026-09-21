@@ -1,24 +1,18 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
 metadata:
   name: argocd
   namespace: argocd
-  annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/service.serversscheme: https
-    traefik.ingress.kubernetes.io/service.serverstransport: argocd-argocd@kubernetescrd
 
 spec:
-  ingressClassName: traefik
+  entryPoints:
+    - websecure
 
-  rules:
-    - host: argocd.localhost
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: argocd-server
-                port:
-                  number: 443
+  routes:
+    - match: Host(`argocd.localhost`)
+      kind: Rule
+      services:
+        - name: argocd-server
+          port: 443
+          scheme: https
+          serversTransport: argocd
