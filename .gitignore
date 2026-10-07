@@ -1,0 +1,4 @@
+*.agekey
+keys.txt
+*.decrypted.yaml
+*.plaintext.yaml
