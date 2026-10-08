@@ -9,8 +9,6 @@ spec:
     repoURL: https://github.com/Matyjash/gitops-playground.git
     targetRevision: main
     path: apps/pollandgo
-    plugin:
-      name: sops-kustomize-v1
   destination:
     server: https://kubernetes.default.svc
     namespace: pollandgo
