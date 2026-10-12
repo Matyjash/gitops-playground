@@ -14,13 +14,17 @@ spec:
       releaseName: monitoring
       valuesObject:
         grafana:
-          enabled: true
+          # Re-enable once the VM has enough headroom for dashboards.
+          enabled: false
           service:
             type: ClusterIP
 
         prometheus:
           prometheusSpec:
-            retention: 7d
+            retention: 2d
+            retentionSize: 1GB
+            scrapeInterval: 60s
+            evaluationInterval: 60s
             resources:
               requests:
                 cpu: 100m
@@ -40,6 +44,49 @@ spec:
 
         alertmanager:
           enabled: true
+          alertmanagerSpec:
+            resources:
+              requests:
+                cpu: 25m
+                memory: 64Mi
+              limits:
+                cpu: 100m
+                memory: 128Mi
+
+        prometheusOperator:
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          prometheusConfigReloader:
+            resources:
+              requests:
+                cpu: 10m
+                memory: 16Mi
+              limits:
+                cpu: 50m
+                memory: 64Mi
+
+        kube-state-metrics:
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+
+        prometheus-node-exporter:
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
 
         # These control-plane components are embedded in K3s.
         kubeEtcd:
