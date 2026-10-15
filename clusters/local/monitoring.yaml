@@ -15,7 +15,7 @@ spec:
       valuesObject:
         grafana:
           # Re-enable once the VM has enough headroom for dashboards.
-          enabled: false
+          enabled: true
           service:
             type: ClusterIP
 
