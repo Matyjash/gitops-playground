@@ -6,97 +6,105 @@ metadata:
 spec:
   project: default
 
-  source:
-    repoURL: https://prometheus-community.github.io/helm-charts
-    chart: kube-prometheus-stack
-    targetRevision: 91.8.1
-    helm:
-      releaseName: monitoring
-      valuesObject:
-        grafana:
-          # Re-enable once the VM has enough headroom for dashboards.
-          enabled: true
-          service:
-            type: ClusterIP
+  sources:
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: kube-prometheus-stack
+      targetRevision: 91.8.1
+      helm:
+        releaseName: monitoring
+        valuesObject:
+          grafana:
+            # Re-enable once the VM has enough headroom for dashboards.
+            enabled: true
+            sidecar:
+              dashboards:
+                enabled: true
+                label: grafana_dashboard
+                labelValue: "1"
+            service:
+              type: ClusterIP
 
-        prometheus:
-          prometheusSpec:
-            retention: 2d
-            retentionSize: 1GB
-            scrapeInterval: 60s
-            evaluationInterval: 60s
-            resources:
-              requests:
-                cpu: 100m
-                memory: 256Mi
-              limits:
-                cpu: 200m
-                memory: 512Mi
-            storageSpec:
-              volumeClaimTemplate:
-                spec:
-                  storageClassName: local-path
-                  accessModes:
-                    - ReadWriteOnce
-                  resources:
-                    requests:
-                      storage: 2Gi
+          prometheus:
+            prometheusSpec:
+              retention: 2d
+              retentionSize: 1GB
+              scrapeInterval: 60s
+              evaluationInterval: 60s
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 256Mi
+                limits:
+                  cpu: 200m
+                  memory: 512Mi
+              storageSpec:
+                volumeClaimTemplate:
+                  spec:
+                    storageClassName: local-path
+                    accessModes:
+                      - ReadWriteOnce
+                    resources:
+                      requests:
+                        storage: 2Gi
 
-        alertmanager:
-          enabled: true
-          alertmanagerSpec:
+          alertmanager:
+            enabled: true
+            alertmanagerSpec:
+              resources:
+                requests:
+                  cpu: 25m
+                  memory: 64Mi
+                limits:
+                  cpu: 100m
+                  memory: 128Mi
+
+          prometheusOperator:
             resources:
               requests:
                 cpu: 25m
                 memory: 64Mi
               limits:
+                cpu: 200m
+                memory: 256Mi
+            prometheusConfigReloader:
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 16Mi
+                limits:
+                  cpu: 50m
+                  memory: 64Mi
+
+          kube-state-metrics:
+            resources:
+              requests:
+                cpu: 25m
+                memory: 32Mi
+              limits:
                 cpu: 100m
                 memory: 128Mi
 
-        prometheusOperator:
-          resources:
-            requests:
-              cpu: 25m
-              memory: 64Mi
-            limits:
-              cpu: 200m
-              memory: 256Mi
-          prometheusConfigReloader:
+          prometheus-node-exporter:
             resources:
               requests:
                 cpu: 10m
-                memory: 16Mi
+                memory: 32Mi
               limits:
-                cpu: 50m
+                cpu: 100m
                 memory: 64Mi
 
-        kube-state-metrics:
-          resources:
-            requests:
-              cpu: 25m
-              memory: 32Mi
-            limits:
-              cpu: 100m
-              memory: 128Mi
-
-        prometheus-node-exporter:
-          resources:
-            requests:
-              cpu: 10m
-              memory: 32Mi
-            limits:
-              cpu: 100m
-              memory: 64Mi
-
-        # These control-plane components are embedded in K3s.
-        kubeEtcd:
-          enabled: false
-        kubeControllerManager:
-          enabled: false
-        kubeScheduler:
-          enabled: false
-        kubeProxy:
-          enabled: false
+          # These control-plane components are embedded in K3s.
+          kubeEtcd:
+            enabled: false
+          kubeControllerManager:
+            enabled: false
+          kubeScheduler:
+            enabled: false
+          kubeProxy:
+            enabled: false
+    - repoURL: https://github.com/Matyjash/gitops-playground.git
+      targetRevision: main
+      path: apps/monitoring/dashboards
 
   destination:
     server: https://kubernetes.default.svc
