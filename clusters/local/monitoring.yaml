@@ -4,7 +4,7 @@ metadata:
   name: monitoring
   namespace: argocd
 spec:
-  project: default
+  project: local
 
   sources:
     - repoURL: https://prometheus-community.github.io/helm-charts

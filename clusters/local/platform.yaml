@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 
 spec:
-  project: default
+  project: local
 
   source:
     repoURL: https://github.com/Matyjash/gitops-playground.git
