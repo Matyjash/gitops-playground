@@ -34,7 +34,7 @@ secrets. Run from the repository root.
 4. Start GitOps reconciliation and check application status:
 
    ```sh
-   kubectl apply -f bootstrap/root-application.yaml
+   kubectl apply -f bootstrap/roots/local.yaml
    kubectl -n argocd get applications
    ```
 
