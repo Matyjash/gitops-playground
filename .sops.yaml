@@ -1,4 +1,4 @@
 creation_rules:
-  - path_regex: ^apps/pollandgo/secrets/.*\.sops\.yaml$
+  - path_regex: ^apps/pollandgo/database/.*\.sops\.yaml$
     encrypted_regex: ^(data|stringData)$
     age: age1pcmvje400j6uzs6kwrn9ym482mf9pwa7wc4m3ph8wexz30rmj45sswup46
