@@ -14,8 +14,8 @@ spec:
         releaseName: monitoring
         valuesObject:
           grafana:
-            # Re-enable once the VM has enough headroom for dashboards.
-            enabled: true
+            # Keeping off to save resources.
+            enabled: false
             sidecar:
               dashboards:
                 enabled: true
